@@ -84,61 +84,44 @@ class Users extends Model
         // バリデーション結果
         $result = false;
 
-        // POSTに空データがないか
-        if(empty($form["sex"])){
-            Response::redirect("entrance/top/new");
-        }
-
-        $last_name = $form["last_name"];
-        $first_name = $form["first_name"];
-        $mail = $form["mail"];
-        $pass = $form["pass"];
-        $pass_ck = $form["pass_ck"];
-        $sex = $form["sex"];
-
-        echo "<pre>";
-        var_dump($form);
-        echo "</pre>";
-
         // バリデーション
-        $val->add('last_name', $last_name)
+        $val->add('last_name', '苗字')
             ->add_rule('required')
             ->add_rule('max_length', 255);
 
-        $val->add('first_name', $first_name)
+        $val->add('first_name', '名')
             ->add_rule('required')
             ->add_rule('max_length', 255);
 
-        $val->add('mail', $mail)
+        $val->add('mail', 'メールアドレス')
             ->add_rule('required')
             ->add_rule('valid_email')
             ->add_rule('max_length', 255);
 
-        $val->add('pass', $pass)
+        $val->add('pass', 'パスワード')
             ->add_rule('required')
             ->add_rule('max_length', 255);
 
-        $val->add('pass_ck', $pass_ck)
+        $val->add('pass_ck', '確認用パスワード')
             ->add_rule('required')
             ->add_rule('max_length', 255);
 
-        $val->add('sex', $sex)
+        $val->add('sex', '性別')
             ->add_rule('required');
 
         // 何も引数を指定しなかった場合、デフォルトで$_POSTが引き渡される
         if($val->run()){
+            // バリデーション成功
             $result = true;
             return $result;
         }else{
             // バリデーション失敗
-            // return $result;
-
+            echo "<b style='color: red; font-size: 32px;'>入力に誤りがあります</b><br>";
             foreach($val->error() as $key=>$value){
-                // $key:'email'
-                // $value:エラー
-                // $value->get_message();
-                echo $value->get_message();
+                echo $value -> get_message();
+                echo "<br>";
             }
+            exit;
         }
     }
 
