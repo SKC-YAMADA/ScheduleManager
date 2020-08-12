@@ -5,6 +5,7 @@ use Fuel\Core\Arr;
 use Fuel\Core\Response;
 use Model\Users;
 use Functions\Common;
+use validate\Entrance;
 
 /**
  * Fuel is a fast, lightweight, community driven PHP 5.4+ framework.
@@ -48,6 +49,10 @@ use Functions\Common;
         if(!$form){
             Response::redirect("entrance/top/new");
         }
+
+        $v_result = Users::regi_validation($form);
+        var_dump($v_result);
+        exit;
 
         // 入力情報を変数に格納する
         $last_name = $form["last_name"];
