@@ -5,6 +5,9 @@ namespace Model;
 use Fuel\Core\Arr;
 use fuel\core\DB;
 use fuel\core\Model;
+use fuel\core\Validation;
+use Fuel\Core\Response;
+use Myvalidations;
 
 class Users extends Model
 {
@@ -67,6 +70,76 @@ class Users extends Model
         // current()は先頭のものを持ってくる
         $result = DB::query($sql) -> execute() -> current();
         return $result;
+    }
+
+    //バリデーション------------------------------------------------------------------------------------
+    public static function regi_validation($form)
+    {
+        // バリデーションクラスをインスタンス化
+        $val = Validation::instance();
+
+        // 拡張バリデーション
+        // $val->add_callable ( new Myvalidations () );
+
+        // バリデーション結果
+        $result = false;
+
+        // POSTに空データがないか
+        if(empty($form["sex"])){
+            Response::redirect("entrance/top/new");
+        }
+
+        $last_name = $form["last_name"];
+        $first_name = $form["first_name"];
+        $mail = $form["mail"];
+        $pass = $form["pass"];
+        $pass_ck = $form["pass_ck"];
+        $sex = $form["sex"];
+
+        echo "<pre>";
+        var_dump($form);
+        echo "</pre>";
+
+        // バリデーション
+        $val->add('last_name', $last_name)
+            ->add_rule('required')
+            ->add_rule('max_length', 255);
+
+        $val->add('first_name', $first_name)
+            ->add_rule('required')
+            ->add_rule('max_length', 255);
+
+        $val->add('mail', $mail)
+            ->add_rule('required')
+            ->add_rule('valid_email')
+            ->add_rule('max_length', 255);
+
+        $val->add('pass', $pass)
+            ->add_rule('required')
+            ->add_rule('max_length', 255);
+
+        $val->add('pass_ck', $pass_ck)
+            ->add_rule('required')
+            ->add_rule('max_length', 255);
+
+        $val->add('sex', $sex)
+            ->add_rule('required');
+
+        // 何も引数を指定しなかった場合、デフォルトで$_POSTが引き渡される
+        if($val->run()){
+            $result = true;
+            return $result;
+        }else{
+            // バリデーション失敗
+            // return $result;
+
+            foreach($val->error() as $key=>$value){
+                // $key:'email'
+                // $value:エラー
+                // $value->get_message();
+                echo $value->get_message();
+            }
+        }
     }
 
 }

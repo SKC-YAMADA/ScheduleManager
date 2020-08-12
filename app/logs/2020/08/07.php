@@ -67,3 +67,6 @@ WARNING - 2020-08-07 05:31:36 --> Fuel\Core\Fuel::init - The configured locale e
 WARNING - 2020-08-07 05:32:14 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
 WARNING - 2020-08-07 05:32:32 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
 ERROR - 2020-08-07 05:32:32 --> Notice - Array to string conversion in C:\xampp\htdocs\fuelphp\fuel\app\classes\controller\internal\mypage.php on line 51
+WARNING - 2020-08-07 10:42:36 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2020-08-07 10:42:38 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2020-08-07 10:42:38 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.

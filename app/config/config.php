@@ -27,7 +27,8 @@ return array(
 	 *
 	 */
 
-	// 'base_url' => null,
+	 // 設定したURL分省略できる
+	'base_url' => 'http://localhost/fuelphp/public/',
 
 	/**
 	 * -------------------------------------------------------------------------
@@ -140,9 +141,10 @@ return array(
 
 	/**
 	 *  The default language.
+	 *  バリデーション時のエラーメッセージを日本語化する
 	 */
 
-	// 'language' => 'en',
+	'language' => 'ja',
 
 	/**
 	 *  Fallback language when file isn't available for default language.
@@ -152,9 +154,10 @@ return array(
 
 	/**
 	 *  PHP set_locale() setting. Use null to not set.
+	 *  バリデーション時のエラーメッセージを日本語化する
 	 */
 
-	// 'locale' => 'en_US',
+	'locale' => 'ja_JP.UTF-8',
 
 	/**
 	 * -------------------------------------------------------------------------
@@ -467,6 +470,7 @@ return array(
 		 * ---------------------------------------------------------------------
 		 */
 
+		 // ormを使用可能にする
 		'packages' => array(
 			'orm',
 		),
@@ -531,8 +535,5 @@ return array(
 		 */
 
 		// 'language' => array(),
-
-		
-		'base_url' => 'http://localhost/fuelphp/public/'
 	),
 );
