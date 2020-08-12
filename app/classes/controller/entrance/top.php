@@ -51,8 +51,6 @@ use validate\Entrance;
         }
 
         $v_result = Users::regi_validation($form);
-        var_dump($v_result);
-        exit;
 
         // 入力情報を変数に格納する
         $last_name = $form["last_name"];
