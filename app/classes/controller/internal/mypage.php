@@ -3,6 +3,9 @@
 use Fuel\Core\Config;
 use Fuel\Core\Arr;
 use Fuel\Core\Response;
+use Fuel\Core\Session;
+use Functions\Common;
+
 use Model\Areainformationmaster;
 use Model\Reservationinformation;
 use Model\Roominformationmaster;
@@ -21,6 +24,15 @@ use Model\Users;
 
  class Controller_internal_mypage extends Controller
  {
+    public function before(){
+        $user_id = Session::get_flash('user_id', '受け取れませんでした');
+        var_dump($user_id);
+        exit;
+        if(!isset($user_id)){
+            Response::redirect("entrance/top/");
+        }
+    }
+
     public function action_index()
     {
         $view = View::forge( "internal/mypage");
@@ -46,7 +58,7 @@ use Model\Users;
         $data = array(
             'room_info' => $room_info,
         );
-
+        
         $view = View::forge("internal/form", $data);
         return Response::forge($view);
     }
@@ -71,5 +83,4 @@ use Model\Users;
         $view = View::forge( "internal/confirm", $regi_data);
         return Response::forge($view);
     }
-
  }
