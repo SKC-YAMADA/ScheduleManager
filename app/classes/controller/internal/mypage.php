@@ -83,4 +83,51 @@ use Model\Users;
         $view = View::forge( "internal/confirm", $regi_data);
         return Response::forge($view);
     }
- }
+
+    public function action_sample()
+    {
+        $view = View::forge( "internal/sample");
+        return Response::forge($view);
+    }
+
+    public function action_loadschedule()
+    {
+        error_log(print_r("aaaaa",true),3,"C:/work/ScheduleManager/fuel/app/test.log");			
+        $post = Input::post();
+        $data = array();
+        $data['user_id'] = $post['user_id'];
+		$reservation_information = new ReservationInformation(); 
+		$schedules = $reservation_information->get_event_info($data);
+		$tmp_schedule = array();
+		$view_schedules = array();
+		foreach ($schedules as $key => $schedule) {
+			$tmp_schedule = array(
+				'id' => $schedule['reservation_information_id'],
+				'start_date' => $schedule['start_at'],
+				'end_at' => $schedule['end_at'],
+				'text' => $schedule['remarks'],
+			);
+			array_push($view_schedules, $tmp_schedule);
+		}
+        return json_encode($view_schedules);
+    }
+
+    public function action_save()
+	{
+        $result = 0;
+
+		try{
+			$server = Input::server();
+			// ajax通信以外は終了
+			if(strtolower(Arr::get($server, 'HTTP_X_REQUESTED_WITH', null)) == 'xmlhttprequest'){
+				$post = Input::post();
+				$reservation_information = new ReservationInformation(); 
+				$result = $reservation_information -> save_event_info($post);
+			}
+		}catch(Exception $e){
+			error_log(print_r($e,true),3,"C:/work/ScheduleManager/fuel/app/test.log");			
+		}
+		error_log(print_r($result,true),3,"C:/work/ScheduleManager/fuel/app/test.log");
+		return $result;
+	}
+}
