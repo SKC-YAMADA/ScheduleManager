@@ -79,8 +79,8 @@ class Users extends Model
         $val = Validation::instance();
 
         // 拡張バリデーション
-        $val = Validation::forge();
-        $val->add_callable ("Myvalidations");
+        // $val = Validation::forge();
+        // $val->add_callable ("Myvalidations");
 
         // バリデーション結果
         $result = false;

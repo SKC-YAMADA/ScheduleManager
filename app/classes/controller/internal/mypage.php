@@ -25,12 +25,12 @@ use Model\Users;
  class Controller_internal_mypage extends Controller
  {
     public function before(){
-        $user_id = Session::get_flash('user_id', '受け取れませんでした');
-        var_dump($user_id);
-        exit;
-        if(!isset($user_id)){
-            Response::redirect("entrance/top/");
-        }
+        // $user_id = Session::get('user_id', '受け取れませんでした');
+        // var_dump($user_id);
+        // exit;
+        // if(!isset($user_id)){
+        //     Response::redirect("entrance/top/");
+        // }
     }
 
     public function action_index()
@@ -46,7 +46,6 @@ use Model\Users;
         
         $tmp_room_info = array();
         $room_info = array();
-        
         foreach ($get_place_info as $key => $value)
         {
             $tmp_room_info = array(
@@ -65,22 +64,45 @@ use Model\Users;
 
     public function action_confirm()
     {
-        $input       = Input::Post();
-        $start_at    = Arr::get($input, 'start_at', NULL);
-        $end_at      = Arr::get($input, 'end_at', NULL);
-        $remarks     = Arr::get($input, 'remarks', NULL);
+        $input               = Input::Post();
+        $room_information_id = Arr::get($input, 'select_room', NULL);
+        $start_at            = Arr::get($input, 'start_at', NULL);
+        $end_at              = Arr::get($input, 'end_at', NULL);
+        $remarks             = Arr::get($input, 'remarks', NULL);
 
         $regi_data = array(
-            'room_information_id' => 2,
+            'room_information_id' => $room_information_id,
             'user_id' => 1,
             'request_status' => 1,
             'start_at' => $start_at,
             'end_at' =>  $end_at,
-            'reservation_at' => '2000-01-31 07:00:00',
             'remarks' => $remarks,
         );
 
         $view = View::forge( "internal/confirm", $regi_data);
+        return Response::forge($view);
+    }
+
+    public function action_select()
+    {
+        // SQLを実行して情報取得
+        $get_place_info = Areainformationmaster::get_place_info() -> as_array();
+        
+        $tmp_room_info = array();
+        $room_info = array();
+        foreach ($get_place_info as $key => $value)
+        {
+            $tmp_room_info = array(
+                $value['room_information_id'] => $value['full_name']
+            );
+            $room_info = $room_info + $tmp_room_info;
+        }
+
+        $data = array(
+            'room_info' => $room_info,
+        );
+        
+        $view = View::forge("internal/sample", $data);
         return Response::forge($view);
     }
 

@@ -3,7 +3,7 @@ $path_new = Config::get('base_url');
 $path_new .= "entrance/top/new";
 
 $path_login = Config::get('base_url');
-$path_login .= "entrance/top/in";
+$path_login .= "entrance/top/login";
 
 ?>
 

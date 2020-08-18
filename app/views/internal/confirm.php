@@ -3,11 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> 確認しろ </title>
+    <title> 予約情報確認画面 </title>
 </head>
 
 <body>
-    
 </body>
 
 </html>
