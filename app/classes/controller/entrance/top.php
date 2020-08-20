@@ -128,6 +128,7 @@ use validate\Entrance;
             $result = Common::login($input, $users_info);
             if($result){
                 $user_id = $users_info["user_id"];
+                Session::start();
                 Session::set('user_id', $user_id);
                 Response::redirect("internal/mypage");
             }else{

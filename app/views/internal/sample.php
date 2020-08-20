@@ -23,18 +23,49 @@
 	}	
 </style>
 
-<script type="text/javascript" charset="utf-8">
-    const button = document.getElementsByClassName("dhx_save_btn_set");
 
-	<?php var_dump($room_info); exit; ?>
+<script type="text/javascript" charset="utf-8">
+	const button = document.getElementsByClassName("dhx_save_btn_set");
 
 	function init() {
+		var sections = [];
 
-		//key → 部屋id  label → 部屋名
-		var sections=[
-			{key:1, label:"Section A"},
-		];
-		
+		// 初期値の取得
+		$.ajax({
+			// action_init に通信
+			url: '/fuelphp/public/internal/mypage/init',
+			type: 'POST',
+			dataType: 'json',
+		})
+
+		// 引数はaction_init からかえってきたもの
+		.done(function(init_data) {
+			// 通信成功時の処理を記述
+			console.log("TRUE");
+			var tmp_sections=[];
+			
+			init_data.forEach(function(value)
+			{
+				tmp_sections = { key:value['area_id'], label:value['full_name'] };
+				sections.push(tmp_sections)
+			});
+
+			scheduler.createUnitsView({
+				name:"unit",
+				property:"section_id",
+				list:sections
+			});
+			scheduler.config.multi_day = true;
+			scheduler.init('scheduler_here',new Date(),"unit");
+		})
+
+		.fail(function() {
+			// 通信失敗時の処理を記述
+			console.log("FALSE");
+			return null;
+		});
+		// scheduler.load(data);
+
 		scheduler.locale.labels.unit_tab = "Unit"
 		scheduler.locale.labels.section_custom="Section";
 		scheduler.config.details_on_create=true;
@@ -45,15 +76,7 @@
 			{name:"custom", height:23, type:"select", options:sections, map_to:"section_id" },
 			{name:"time", height:72, type:"time", map_to:"auto"}
 		]
-		
-		scheduler.createUnitsView({
-			name:"unit",
-			property:"section_id",
-			list:sections
-		});
-		scheduler.config.multi_day = true;
-		
-		scheduler.init('scheduler_here',new Date(),"unit");
+
 		// var data = load_schedule();
 		$.ajax({
 			url: '/fuelphp/public/internal/mypage/loadschedule',
@@ -67,14 +90,13 @@
 			// 通信成功時の処理を記述
 			console.log("seikou2");
 			console.log(ev);
-			scheduler.load(JSON.parse(ev));
+			// scheduler.load(JSON.parse(ev));
 		})
 		.fail(function() {
 			// 通信失敗時の処理を記述
 			console.log("sippai2");
 			return null;
 		});
-		// scheduler.load(data);
 	}
     
     $(function () {
@@ -187,9 +209,11 @@
             <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
             <div class="dhx_cal_tab" name="unit_tab" style="right:280px;"></div>
             <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
-        </div>
+		</div>
+		
         <div class="dhx_cal_header">
-        </div>
+		</div>
+		
         <div class="dhx_cal_data">
         </div>		
     </div>

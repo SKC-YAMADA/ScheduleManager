@@ -24,17 +24,24 @@ use Model\Users;
 
  class Controller_internal_mypage extends Controller
  {
-    public function before(){
-        // $user_id = Session::get('user_id', '受け取れませんでした');
-        // var_dump($user_id);
-        // exit;
-        // if(!isset($user_id)){
-        //     Response::redirect("entrance/top/");
-        // }
-    }
+    // public function before()
+    // {
+    //     $user_id = Session::get('user_id', '受け取れませんでした');
+    //     var_dump($user_id);
+    //     exit;
+    //     if(!isset($user_id)){
+    //         Response::redirect("entrance/top/");
+    //     }
+    // }
 
     public function action_index()
     {
+        $user_id = Session::get();
+        var_dump($user_id);
+        exit;
+        if(!isset($user_id)){
+            Response::redirect("entrance/top/");
+        }
         $view = View::forge( "internal/mypage");
         return Response::forge($view);
     }
@@ -83,11 +90,11 @@ use Model\Users;
         return Response::forge($view);
     }
 
-    public function action_select()
+    public function action_sample()
     {
         // SQLを実行して情報取得
         $get_place_info = Areainformationmaster::get_place_info() -> as_array();
-        
+
         $tmp_room_info = array();
         $room_info = array();
         foreach ($get_place_info as $key => $value)
@@ -101,20 +108,13 @@ use Model\Users;
         $data = array(
             'room_info' => $room_info,
         );
-        
-        $view = View::forge("internal/sample", $data);
-        return Response::forge($view);
-    }
 
-    public function action_sample()
-    {
-        $view = View::forge( "internal/sample");
+        $view = View::forge( "internal/sample", $data);
         return Response::forge($view);
     }
 
     public function action_loadschedule()
-    {
-        error_log(print_r("aaaaa",true),3,"C:/work/ScheduleManager/fuel/app/test.log");			
+    {			
         $post = Input::post();
         $data = array();
         $data['user_id'] = $post['user_id'];
@@ -151,5 +151,27 @@ use Model\Users;
 		}
 		error_log(print_r($result,true),3,"C:/work/ScheduleManager/fuel/app/test.log");
 		return $result;
-	}
+    }
+    
+    public function action_init()
+    {
+        // SQLを実行して情報取得
+        $get_place_info = Areainformationmaster::get_place_info() -> as_array();
+        
+        // $tmp_room_info = array();
+        // $room_info = array();
+        // foreach ($get_place_info as $key => $value)
+        // {
+        //     $tmp_room_info = array(
+        //         $value['room_information_id'] => $value['full_name']
+        //     );
+        //     $room_info = $room_info + $tmp_room_info;
+        // }
+
+        // $data = array(
+        //     'room_info' => $room_info,
+        // );
+        
+        return json_encode($get_place_info);
+    }
 }

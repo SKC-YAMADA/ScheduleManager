@@ -99,8 +99,8 @@ class Reservationinformation extends \Orm\Model
      */
     public function save_event_info($data){
         $result = 0;
-        $exist_event_info = self::get_event_info($data);
         // TODO:2 バリデーションチェック追加
+        $exist_event_info = self::get_event_info($data);
         $insert_value = self::shape_event_info($data);
         if(empty($exist_event_info)){
             // スケジュールIDがない場合は新規登録とする
