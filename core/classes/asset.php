@@ -216,6 +216,7 @@ class Asset
 	 */
 	public static function js($scripts = array(), $attr = array(), $group = NULL, $raw = false)
 	{
+		// $scripts → スクリプト名
 		return static::instance()->assettype('js', $scripts, $attr, $group, $raw);
 	}
 

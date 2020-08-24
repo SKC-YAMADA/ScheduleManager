@@ -3,6 +3,7 @@
 use Fuel\Core\Config;
 use Fuel\Core\Arr;
 use Fuel\Core\Response;
+use Fuel\Core\Session;
 use Model\Users;
 use Functions\Common;
 use validate\Entrance;
@@ -126,10 +127,13 @@ use validate\Entrance;
         if(!empty($users_info)){
             $result = Common::login($input, $users_info);
             if($result){
+                $user_id = $users_info["user_id"];
+                Session::start();
+                Session::set('user_id', $user_id);
                 Response::redirect("internal/mypage");
             }else{
                 $view = View::forge( "error/differ" );
-                return Response::forge( $view );       
+                return Response::forge( $view );
             }
         }else{
             $view = View::forge( "error/differ" );

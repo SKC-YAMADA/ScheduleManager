@@ -15,7 +15,7 @@ class Reservationinformation extends \Orm\Model
 	protected static $_properties = array(
 		'reservation_information_id',
 		'room_information_id',
-		'user_id',
+        'user_id',
 		'request_status',
 		'start_at',
 		'end_at',
@@ -35,41 +35,31 @@ class Reservationinformation extends \Orm\Model
        TODO:3 room_information_idをcontroller側で取得し、model.reservationinformationに渡して保存する
        TODO:4 user_idをcontroller側で取得し、model.reservationinformationに渡して保存する
     */ 
-    public static function reservartion($regi_data)
+    public static function reservation($regi_data)
     {
-        $room_information_id = Arr::get($regi_data, 'room_information_id', 0);
-        $user_id             = Arr::get($regi_data, 'user_id', 0);
-        $request_status      = Arr::get($regi_data, 'request_status', 0);
-        $start_at            = Arr::get($regi_data, 'start_at', NULL);
-        $end_at              = Arr::get($regi_data, 'end_at', NULL);
-        $reservation_at      = Arr::get($regi_data, 'reservation_at', NULL);
-        $remarks             = Arr::get($regi_data, 'remarks', NULL);
+        $values = array();
 
-        $sql = "INSERT INTO
-            reservation_information(
-                `room_information_id`,
-                `user_id`,
-                `request_status`,
-                `start_at`,
-                `end_at`,
-                `reservation_at`,
-                `remarks`,
-                `del_flg`
-            )
-            VALUES(
-                $room_information_id,
-                $user_id,
-                $request_status,
-                '$start_at',
-                '$end_at',
-                '$reservation_at',
-                '$remarks',
-                0
-            )
-        ";
+        // フォームの入力情報取得
+        $mail        = Arr::get($regi_data, 'mail');
+        $pass        = Arr::get($regi_data, 'pass');
+        $last_name   = Arr::get($regi_data, 'last_name');
+        $first_name  = Arr::get($regi_data, 'first_name');
+        $sex         = Arr::get($regi_data, 'sex');
 
-        $result = DB::query( $sql ) -> execute();
-        return $result;
+        // $valuesに入力情報を格納
+        $values['mail']          = $mail;
+        $values['pass']          = $pass;
+        $values['last_name']     = $last_name;
+        $values['first_name']    = $first_name;
+        $values['sex']           = $sex;
+        $values['created_at']    = date("Y/m/d H:i:s");
+        $values['updated_at']    = date("Y/m/d H:i:s");
+        $values['del_flg']       = 0;
+
+        // インスタンス化
+        $users = Users::forge($values);
+        // insertする
+        $users -> save();
     }
 
     /***
@@ -89,6 +79,7 @@ class Reservationinformation extends \Orm\Model
             $where .= " AND user_id = $user_id";
         }
 
+        // 削除フラグが0で、リクエストステータスが1のものを取得
         $sql = "
             SELECT
                  *
@@ -108,8 +99,8 @@ class Reservationinformation extends \Orm\Model
      */
     public function save_event_info($data){
         $result = 0;
-        $exist_event_info = self::get_event_info($data);
         // TODO:2 バリデーションチェック追加
+        $exist_event_info = self::get_event_info($data);
         $insert_value = self::shape_event_info($data);
         if(empty($exist_event_info)){
             // スケジュールIDがない場合は新規登録とする

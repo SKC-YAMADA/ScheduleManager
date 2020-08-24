@@ -27,7 +27,8 @@ class Myvalidations
      * @param string $val 判定対象の文字列
      * @return boolean 全て全角文字ならtrueを、それ以外ならfalseを返却する
      */
-    public static function _validation_zenkaku($val) {
+    public static function zenkaku_check($val)
+    {
         // 半角文字を全角に変換
         $zenkaku = mb_convert_kana($val, 'AKV');
 

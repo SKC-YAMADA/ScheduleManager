@@ -3,23 +3,23 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> 入力しろ </title>
+    <title> 予約情報入力画面 </title>
 </head>
 
 <body>
 
     <?php
+        // option タグに部屋名を格納
         $room_list = "";
         foreach ($room_info as $key => $value) {
             $room_list .= "<option value='". $key;
-            $room_list .= "'>". $value. "</option>";
+            $room_list .= "'>" . $value . "</option>";
         }
-        echo $room_list;
     ?>
 
     <form method="post" action="confirm">
         <p> 会議場所 </p>
-        <select name="select" value="not_selected">
+        <select name="select_room">
             <?php echo $room_list; ?>
         </select>
         <br>
