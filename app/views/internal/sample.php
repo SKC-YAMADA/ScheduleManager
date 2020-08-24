@@ -5,9 +5,11 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title> マイページ </title>
 </head>
-	<?php //echo Asset::js('dhtmlxscheduler.js'); ?>
-	<?php echo Asset::js('http://localhost/assets/js/dhtmlxscheduler.js'); ?>
-	<?php echo Asset::js('http://localhost/assets/js/dhtmlxscheduler_units.js'); ?>
+	<!-- <?php echo Asset::js('dhtmlxscheduler.js'); ?> -->
+	<!-- <?php echo Asset::js('dhtmlxscheduler_units.js'); ?> -->
+	<!-- <?php echo Asset::css('dhtmlxscheduler_material.css'); ?> -->
+    <?php echo Asset::js('http://localhost/assets/js/dhtmlxscheduler.js'); ?>
+    <?php echo Asset::js('http://localhost/assets/js/dhtmlxscheduler_units.js'); ?>
     <?php echo Asset::css('http://localhost/assets/css/dhtmlxscheduler_material.css'); ?>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<!-- <script src="../../codebase/dhtmlxscheduler.js?v=5.3.9" type="text/javascript" charset="utf-8"></script>
@@ -90,6 +92,18 @@
 			// 通信成功時の処理を記述
 			console.log("seikou2");
 			console.log(ev);
+			for (var i in ev) {
+				console.log("プロパティは" + i + "、値は" + ev[i]['id'] + "。");
+				console.log("プロパティは" + i + "、値は" + ev[i]['start_at'] + "。");
+				console.log("プロパティは" + i + "、値は" + ev[i]['end_at'] + "。");
+				console.log("プロパティは" + i + "、値は" + ev[i]['text'] + "。");
+				var eventId = scheduler.addEvent({
+					start_date:ev[i]['start_at'],
+					end_date  :ev[i]['end_at'],
+					text	  :ev[i]['text']
+				});
+				scheduler.changeEventId(eventId, ev[i]['id']);
+			}
 			// scheduler.load(JSON.parse(ev));
 		})
 		.fail(function() {

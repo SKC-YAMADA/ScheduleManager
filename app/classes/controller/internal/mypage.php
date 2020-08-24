@@ -125,7 +125,7 @@ use Model\Users;
 		foreach ($schedules as $key => $schedule) {
 			$tmp_schedule = array(
 				'id' => $schedule['reservation_information_id'],
-				'start_date' => $schedule['start_at'],
+				'start_at' => $schedule['start_at'],
 				'end_at' => $schedule['end_at'],
 				'text' => $schedule['remarks'],
 			);
@@ -147,9 +147,7 @@ use Model\Users;
 				$result = $reservation_information -> save_event_info($post);
 			}
 		}catch(Exception $e){
-			error_log(print_r($e,true),3,"C:/work/ScheduleManager/fuel/app/test.log");			
 		}
-		error_log(print_r($result,true),3,"C:/work/ScheduleManager/fuel/app/test.log");
 		return $result;
     }
     
@@ -157,21 +155,6 @@ use Model\Users;
     {
         // SQLを実行して情報取得
         $get_place_info = Areainformationmaster::get_place_info() -> as_array();
-        
-        // $tmp_room_info = array();
-        // $room_info = array();
-        // foreach ($get_place_info as $key => $value)
-        // {
-        //     $tmp_room_info = array(
-        //         $value['room_information_id'] => $value['full_name']
-        //     );
-        //     $room_info = $room_info + $tmp_room_info;
-        // }
-
-        // $data = array(
-        //     'room_info' => $room_info,
-        // );
-        
         return json_encode($get_place_info);
     }
 }
