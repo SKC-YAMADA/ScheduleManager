@@ -91,7 +91,6 @@
 			console.log("seikou2");
 			console.log(ev);
             for (var i in ev) {
-				console.log("プロパティは" + i + "、値は" + ev[i]['id'] + "。");
 				console.log("プロパティは" + i + "、値は" + ev[i]['start_at'] + "。");
 				console.log("プロパティは" + i + "、値は" + ev[i]['end_at'] + "。");
 				console.log("プロパティは" + i + "、値は" + ev[i]['text'] + "。");
@@ -118,12 +117,17 @@
 		});
 
 		scheduler.attachEvent("onEventDragIn", function (ev){
+			console.log(ev);
 			var result = save_event(ev);
 			return result;
 		});	
 		
 		var dragged_event;
 
+		scheduler.attachEvent("onBeforeDrag", function (id, mode, e){
+			dragged_event = scheduler.getEvent(id); 
+			return true;
+		});
 		scheduler.attachEvent("onDragEnd", function(id, mode, e){
 			if(typeof dragged_event !== "undefined"){
 				var event_obj = dragged_event;
@@ -147,11 +151,6 @@
     });
 
 	function save_event(id,ev,is_new,type){
-		if (!ev.text) {
-			alert("Text must not be empty");
-			return false;
-		}
-
 		$.ajax({
 			url: '/fuelphp/public/internal/mypage/save',
 			type: 'POST',

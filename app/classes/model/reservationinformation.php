@@ -171,10 +171,7 @@ class ReservationInformation extends \Orm\Model
     // バリデーション------------------------------------------------------------------------------------------
     public static function save_event_check($data)
     {
-        error_log(print_r($data,true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
-
         $val = Validation::forge();
-
         $today = date("Y/m/d H:i:s");
         $result = false;
 
@@ -182,36 +179,24 @@ class ReservationInformation extends \Orm\Model
             ->add_rule('required');
 
         $val->add('request_status', '登録状態')
-            ->add_rule('required')
-            ->add_rule('request_status' == 1);
+            ->add_rule('required');
 
         $val->add('start_at', '予約開始日時')
             ->add_rule('required')
-            ->add_rule('start_at' > $today)
-            ->add_rule('start_at' < 'end_at')
             ->add_rule('valid_date', 'Y-m-d H:i:s');
 
         $val->add('end_at', '予約終了日時')
             ->add_rule('required')
-            ->add_rule('end_at' > $today)
-            ->add_rule('start_at' < 'end_at')
             ->add_rule('valid_date', 'Y-m-d H:i:s');
 
         $val->add('reservation_at', '予約した時間')
-            ->add_rule('required')
-            ->add_rule('reservation_at' > $today);
-
-        $val->add('remarks', '備考')
-            ->add_rule('required')
-            ->add_rule('max_length', 255);
+            ->add_rule('required');
 
         if($val->run($data)){
             // バリデーション成功
             $result = true;
-            error_log(print_r("バリデーション成功",true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
             return $result;
         }else{
-            error_log(print_r("バリデーション失敗",true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
             // バリデーション失敗
             echo "<b style='color: red; font-size: 32px;'>予約に失敗しました</b><br>";
             echo "<p> 以下の項目をチェックしてください</p>";
@@ -223,7 +208,6 @@ class ReservationInformation extends \Orm\Model
             echo "</ol>";
             foreach($val->error() as $key=>$value){
                 echo $value -> get_message();
-                error_log(print_r($value -> get_message(),true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
                 echo "<br>";
             }
             exit;

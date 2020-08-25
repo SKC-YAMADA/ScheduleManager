@@ -112,7 +112,7 @@ use Model\Users;
     }
 
     public function action_loadschedule()
-    {			
+    {	
         $post = Input::post();
         $data = array();
         $data['user_id'] = $post['user_id'];
@@ -128,18 +128,18 @@ use Model\Users;
 				'text' => $schedule['remarks'],
 			);
 			array_push($view_schedules, $tmp_schedule);
-		}
+        }
         return json_encode($view_schedules);
     }
 
     public function action_save()
 	{
         $result = 0;
-
 		try{
 			$server = Input::server();
 			// ajax通信以外は終了
 			if(strtolower(Arr::get($server, 'HTTP_X_REQUESTED_WITH', null)) == 'xmlhttprequest'){
+                error_log(print_r("aaaaaaa",true),3,"C:/work/ScheduleManager/fuel/app/test.log");
                 $post = Input::post();
                 $reservation_information = new ReservationInformation(); 
                 $result = $reservation_information -> save_event_info($post);
