@@ -2,12 +2,14 @@
 
 namespace Model;
 
+use Console;
 use Fuel\Core\Arr;
 use Fuel\core\DB;
 use Fuel\core\Model;
+use fuel\core\Validation;
 use DateTime;
 
-class Reservationinformation extends \Orm\Model
+class ReservationInformation extends \Orm\Model
 {
     protected static $_table_name = 'reservation_information';
 	protected static $_primary_key = array('reservation_information_id');
@@ -99,9 +101,9 @@ class Reservationinformation extends \Orm\Model
      */
     public function save_event_info($data){
         $result = 0;
-        // TODO:2 バリデーションチェック追加
         $exist_event_info = self::get_event_info($data);
         $insert_value = self::shape_event_info($data);
+        $validation_result = self::save_event_check($insert_value);
         if(empty($exist_event_info)){
             // スケジュールIDがない場合は新規登録とする
             $event_info = $this->forge($insert_value);
@@ -131,7 +133,7 @@ class Reservationinformation extends \Orm\Model
      */
     private static function shape_event_info($data){
         $event_info          = Arr::get($data,'event_info');
-        $room_information_id = 10; // TODO:3:room_information_idを取得してセットする
+        $room_information_id = 2; // TODO:3:room_information_idを取得してセットする
         $user_id             = Arr::get($data,'user_id');
         $request_status      = 1;
         $start_at            = Arr::get($event_info,'start_date');
@@ -164,5 +166,67 @@ class Reservationinformation extends \Orm\Model
 	{
         $target_date_time =  strtotime(mb_substr($target_date_time,0,24));
         return date('Y-m-d H:i:s',$target_date_time);
-	}
+    }
+
+    // バリデーション------------------------------------------------------------------------------------------
+    public static function save_event_check($data)
+    {
+        error_log(print_r($data,true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
+
+        $val = Validation::forge();
+
+        $today = date("Y/m/d H:i:s");
+        $result = false;
+
+        $val->add('user_id', 'ユーザーIDの取得')
+            ->add_rule('required');
+
+        $val->add('request_status', '登録状態')
+            ->add_rule('required')
+            ->add_rule('request_status' == 1);
+
+        $val->add('start_at', '予約開始日時')
+            ->add_rule('required')
+            ->add_rule('start_at' > $today)
+            ->add_rule('start_at' < 'end_at')
+            ->add_rule('valid_date', 'Y-m-d H:i:s');
+
+        $val->add('end_at', '予約終了日時')
+            ->add_rule('required')
+            ->add_rule('end_at' > $today)
+            ->add_rule('start_at' < 'end_at')
+            ->add_rule('valid_date', 'Y-m-d H:i:s');
+
+        $val->add('reservation_at', '予約した時間')
+            ->add_rule('required')
+            ->add_rule('reservation_at' > $today);
+
+        $val->add('remarks', '備考')
+            ->add_rule('required')
+            ->add_rule('max_length', 255);
+
+        if($val->run($data)){
+            // バリデーション成功
+            $result = true;
+            error_log(print_r("バリデーション成功",true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
+            return $result;
+        }else{
+            error_log(print_r("バリデーション失敗",true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
+            // バリデーション失敗
+            echo "<b style='color: red; font-size: 32px;'>予約に失敗しました</b><br>";
+            echo "<p> 以下の項目をチェックしてください</p>";
+            echo "<ol>";
+            echo "<li> 入力情報の誤り </li>";
+            echo "<li> 不正な日付の入力 </li>";
+            echo "<li> 許容文字数の超過 </li>";
+            echo "<li> すでに登録済みの予定がある </li>";
+            echo "</ol>";
+            foreach($val->error() as $key=>$value){
+                echo $value -> get_message();
+                error_log(print_r($value -> get_message(),true),3,"C:/xampp/htdocs/fuelphp/fuel/debug.log");
+                echo "<br>";
+            }
+            exit;
+        }
+    }
 }
