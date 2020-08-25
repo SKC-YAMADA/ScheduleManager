@@ -37,8 +37,6 @@ use Model\Users;
     public function action_index()
     {
         $user_id = Session::get();
-        var_dump($user_id);
-        exit;
         if(!isset($user_id)){
             Response::redirect("entrance/top/");
         }
@@ -125,7 +123,7 @@ use Model\Users;
 		foreach ($schedules as $key => $schedule) {
 			$tmp_schedule = array(
 				'id' => $schedule['reservation_information_id'],
-				'start_date' => $schedule['start_at'],
+				'start_at' => $schedule['start_at'],
 				'end_at' => $schedule['end_at'],
 				'text' => $schedule['remarks'],
 			);
