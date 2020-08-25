@@ -7,7 +7,7 @@ use Fuel\Core\Session;
 use Functions\Common;
 
 use Model\Areainformationmaster;
-use Model\Reservationinformation;
+use Model\ReservationInformation;
 use Model\Roominformationmaster;
 use Model\Users;
 
@@ -142,14 +142,12 @@ use Model\Users;
 			$server = Input::server();
 			// ajax通信以外は終了
 			if(strtolower(Arr::get($server, 'HTTP_X_REQUESTED_WITH', null)) == 'xmlhttprequest'){
-				$post = Input::post();
-				$reservation_information = new ReservationInformation(); 
-				$result = $reservation_information -> save_event_info($post);
-			}
+                $post = Input::post();
+                $reservation_information = new ReservationInformation(); 
+                $result = $reservation_information -> save_event_info($post);
+            }
 		}catch(Exception $e){
-			error_log(print_r($e,true),3,"C:/work/ScheduleManager/fuel/app/test.log");			
 		}
-		error_log(print_r($result,true),3,"C:/work/ScheduleManager/fuel/app/test.log");
 		return $result;
     }
     

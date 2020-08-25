@@ -99,7 +99,7 @@
 		});
 	}
     
-	
+
     $(function () {
 		scheduler.attachEvent("onEventSave",function(id,ev,is_new){
 			var result = save_event(id, ev, is_new ,'insert_or_update');

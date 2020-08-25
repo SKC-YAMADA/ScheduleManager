@@ -24,7 +24,8 @@ class Common{
      * 引数 $input $users_info
      * 返り値 $result(bool)
      */
-    public static function login($input, $users_info){
+    public static function login($input, $users_info)
+    {
         // 入力情報
         $input_mail = Arr::get($input, 'mail', null);
         $input_pass = Arr::get($input, 'pass', null);
@@ -40,4 +41,5 @@ class Common{
         
         return $result;
     }
+    
 }
